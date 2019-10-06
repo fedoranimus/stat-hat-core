@@ -50,7 +50,7 @@ namespace StatHat
             
         // }
 
-        private Task PostToStatHat(string stat, double count) {
+        private async Task PostToStatHat(string stat, double count) {
             var ezRequest = new EZRequest(_apiKey, new EZStat(stat, count));
             var content = new StringContent(ezRequest.ToString(), Encoding.UTF8, "application/json");
 
@@ -60,9 +60,10 @@ namespace StatHat
 
             request.Content.Headers.ContentType.CharSet = null;
             
-            _httpClient.SendAsync(request).ConfigureAwait(false);
+            await _httpClient.SendAsync(request).ConfigureAwait(false);
+            //response.EnsureSuccessStatusCode();
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
     }
 }

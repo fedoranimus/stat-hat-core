@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.108
+    - run: dotnet test ~/StatHat.Tests/StatHat.Tests.csproj
+
+  publish-nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.2.108
+
+      - name: Package Library
+        run: dotnet pack ~/StatHat/StatHat.csproj --configuration Release --output nupkg
+
+      - name: Add private GitHub registry to NuGet
+        run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/fedoranimus/index.json -Username fedoranimus -Password ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push generated package to GitHub registry
+        run: nuget push ~/nupkg/StatHat.*.nupkg -Source "GPR" -SkipDuplicate

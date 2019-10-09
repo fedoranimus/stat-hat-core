@@ -22,7 +22,7 @@ jobs:
       run: dotnet test .\StatHat.Tests\StatHat.Tests.csproj
       
     - name: Package Library
-      run: dotnet pack .\StatHat\StatHat.csproj --configuration Release --output nupkg
+      run: dotnet pack .\StatHat\StatHat.csproj --configuration Release --output nupkg -p:PackageID=stat-hat-core
 
     - name: Push generated package to GitHub registry
       run: nuget push .\nupkg\*.nupkg -Source "GPR" -SkipDuplicate

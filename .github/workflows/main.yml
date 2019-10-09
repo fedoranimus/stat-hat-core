@@ -18,11 +18,11 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v1
       
-    - name: Setup .NET Core
-      run: dotnet test ./StatHat.Tests/StatHat.Tests.csproj
+    - name: Run Tests
+      run: dotnet test .\StatHat.Tests\StatHat.Tests.csproj
       
     - name: Package Library
-      run: dotnet pack ./StatHat/StatHat.csproj --configuration Release --output nupkg
+      run: dotnet pack .\StatHat\StatHat.csproj --configuration Release --output nupkg
 
     - name: Push generated package to GitHub registry
-      run: nuget push ./nupkg/StatHat.*.nupkg -Source "GPR" -SkipDuplicate
+      run: nuget push .\nupkg\*.nupkg -Source "GPR" -SkipDuplicate
